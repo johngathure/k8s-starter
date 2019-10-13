@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  app:
+    image: john41/k8s-starter-app:latest
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 8002:80
+    environment:
+      - DB_NAME=$POSTGRES_DB
+      - DB_USER=$POSTGRES_USER
+      - DB_PASSWORD=$POSTGRES_PASSWORD
+      - DB_HOST=$DB_HOST
+      - CACHE_HOST=$CACHE_HOST
+  ui:
+    image: john41/k8s-starter-ui:latest
+    depends_on:
+      - app
+    ports:
+      - 3000:80
+  redis:
+    image: redis:5.0.6-alpine
+  db:
+    image: postgres:12.0-alpine
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB

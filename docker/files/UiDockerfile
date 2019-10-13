@@ -1,0 +1,15 @@
+FROM node:10.16-alpine
+
+WORKDIR /app
+
+COPY todos .
+
+RUN yarn
+
+RUN npm run build
+
+COPY docker/files/entrypoints/ui.sh .
+
+EXPOSE 80
+
+CMD ["/bin/sh", "./ui.sh"]

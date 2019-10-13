@@ -1,0 +1,37 @@
+FROM python:3.6.9-buster as builder
+
+WORKDIR /app
+
+COPY app/requirements.txt .
+
+ENV PATH=/root/.local/bin:$PATH
+RUN pip install --user -r requirements.txt
+
+FROM python:3.6.9-slim-buster
+
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client
+
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_HOST
+ARG CACHE_HOST
+
+ENV DB_NAME=$DB_NAME
+ENV DB_USER=$DB_USER
+ENV DB_PASSWORD=$DB_PASSWORD
+ENV DB_HOST=$DB_HOST
+ENV CACHE_HOST=$CACHE_HOST
+
+ENV PATH=/root/.local/bin:$PATH
+COPY --from=builder /root/.local /root/.local
+
+WORKDIR /app
+
+COPY app .
+
+COPY docker/files/entrypoints/app.sh .
+
+EXPOSE 80
+
+CMD ["/bin/bash", "./app.sh"]
