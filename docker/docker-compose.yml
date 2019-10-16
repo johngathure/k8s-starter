@@ -6,7 +6,7 @@ services:
       - db
       - redis
     ports:
-      - 8002:80
+      - 8002:8002
     environment:
       - DB_NAME=$POSTGRES_DB
       - DB_USER=$POSTGRES_USER
@@ -18,7 +18,7 @@ services:
     depends_on:
       - app
     ports:
-      - 3000:80
+      - 3000:3000
   redis:
     image: redis:5.0.6-alpine
   db:

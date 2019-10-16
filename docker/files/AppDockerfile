@@ -32,6 +32,6 @@ COPY app .
 
 COPY docker/files/entrypoints/app.sh .
 
-EXPOSE 80
+EXPOSE 8002
 
 CMD ["/bin/bash", "./app.sh"]
