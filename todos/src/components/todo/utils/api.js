@@ -1,4 +1,5 @@
-const HOST = 'http://localhost:8002'
+const HOST = 'http://192.168.64.2:30001'
+
 const ENDPOINT = '/api/todos'
 
 const fetchTodos = async () => {
