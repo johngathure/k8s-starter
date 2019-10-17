@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-starter-app-dp
+  labels:
+    app: k8s-starter-app-dp
+    type: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-starter
+  template:
+    metadata:
+      labels:
+        app: k8s-starter
+        type: web
+    spec:
+      containers:
+      - name: k8s-starter-app
+        image: john41/k8s-starter-app:latest
+        imagePullPolicy: Always
+        name: k8s-starter-app
+        envFrom:
+        - configMapRef:
+            name: k8s-starter-cm
+        ports:
+        - containerPort: 8002
+        command: ["gunicorn", "--workers", "3", "--bind", ":8002",
+                  "--log-level", "INFO", "app.wsgi:application"]
+      - name: k8s-starter-ui
+        image: john41/k8s-starter-ui:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+        command: ["./node_modules/.bin/serve", "-l", "3000", "build"]

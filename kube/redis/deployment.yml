@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-starter-cache-dp
+  labels:
+    app: k8s-starter-cache-dp
+    type: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-starter-cache
+  template:
+    metadata:
+      labels:
+         app: k8s-starter-cache
+         type: cache
+    spec:
+      containers:
+      - name: redis-cache
+        image: redis:5.0.6-alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379

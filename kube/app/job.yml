@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k8s-starter-app-jb
+  labels:
+    name: k8s-starter-app-jb
+    type: migrate
+spec:
+  template:
+    spec:
+      containers:
+      - name: k8s-starter-migrate
+        image: john41/k8s-starter-app:latest
+        command: ["python",  "manage.py", "migrate", "--noinput"]
+        envFrom:
+        - configMapRef:
+            name: k8s-starter-cm
+      restartPolicy: Never
+  backoffLimit: 4

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-starter-db-dp
+  labels:
+    app: k8s-starter-db-dp
+    type: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-starter-db
+  template:
+    metadata:
+      labels:
+         app: k8s-starter-db
+         type: db
+    spec:
+      containers:
+      - name: postgres-db
+        image: postgres:12.0-alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: k8s-starter-cm
+                key: DB_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: k8s-starter-cm
+                key: DB_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: k8s-starter-cm
+                key: DB_NAME
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/db-data
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
